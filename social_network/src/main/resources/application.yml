@@ -1,0 +1,30 @@
+spring:
+  datasource:
+#    platform: postgres
+    url: jdbc:postgresql://localhost/talks
+    username: postgres
+    password:
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  session:
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
+      schema: classpath:session_tables.sql
+security:
+  oauth2:
+    client:
+      clientId: 1056666592477-jt0ce6q41b0e7eekgmummlrnr8uoaaon.apps.googleusercontent.com
+      clientSecret: lLigV_aY1E2yGKcF-mV13JPl
+      clientAuthenticationScheme: form
+      scope: openid,email,profile
+      accessTokenUri: https://www.googleapis.com/oauth2/v4/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/v2/auth
+    resource:
+      userInfoUri: https://www.googleapis.com/oauth2/v3/userinfo
+      preferTokenInfo: true
