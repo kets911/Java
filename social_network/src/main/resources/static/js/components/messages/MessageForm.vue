@@ -1,56 +1,67 @@
 <template>
-    <div>
-        <input type="text" placeholder="Write something" v-model="message" />
-        <input type="button" value="Save" @click="save" />
-    </div>
+    <v-layout row>
+        <v-text-field
+                label="New message"
+                placeholder="Write something"
+                v-model="text"
+                @keyup.13 = "save"
+        />
+        <v-btn @click="save">
+            Save
+        </v-btn>
+    </v-layout>
 </template>
 
 <script>
-    function getIndex(list, id) {
-        for (var i = 0; i < list.length; i++ ) {
-            if (list[i].id === id) {
-                return i
-            }
-        }
-
-        return -1
-    }
+    import messagesApi from 'api/messages.js'
 
     export default {
         props: ['messages', 'messageAttr'],
         data() {
             return {
-                message: '',
+                text: '',
                 id: ''
             }
         },
         watch: {
             messageAttr(newVal, oldVal) {
-                this.message = newVal.text
+                this.text = newVal.text
                 this.id = newVal.id
             }
         },
         methods: {
             save() {
-                const message = { message: this.message }
+                // sendMessage({id: this.id, text: this.text})
+                // this.text = ''
+                // this.id = ''
+                const message = {
+                    id: this.id,
+                    text: this.text
+                }
 
                 if (this.id) {
-                    this.$resource('/messages{/id}').update({id: this.id}, message).then(result =>
+                    messagesApi.update(message).then(result =>
                         result.json().then(data => {
-                            const index = getIndex(this.messages, data.id)
+                            const index = this.messages.findIndex(item => item.id === data.id)
                             this.messages.splice(index, 1, data)
-                            this.message = ''
-                            this.id = ''
                         })
                     )
                 } else {
-                    this.$resource('/messages{/id}').save({}, message).then(result =>
+                    messagesApi.add(message).then(result =>
                         result.json().then(data => {
-                            this.messages.push(data)
-                            this.message = ''
+                            const index = this.messages.findIndex(item => item.id === data.id)
+
+                            if (index > -1) {
+                                this.messages.splice(index, 1, data)
+                            } else {
+                                this.messages.push(data)
+                            }
                         })
                     )
                 }
+
+                this.text = ''
+                this.id = ''
             }
         }
     }

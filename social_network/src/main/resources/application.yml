@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: development
   datasource:
 #    platform: postgres
     url: jdbc:postgresql://localhost/talks
@@ -20,7 +22,7 @@ security:
   oauth2:
     client:
       clientId: 1056666592477-jt0ce6q41b0e7eekgmummlrnr8uoaaon.apps.googleusercontent.com
-      clientSecret: lLigV_aY1E2yGKcF-mV13JPl
+      clientSecret: ${client.secret}
       clientAuthenticationScheme: form
       scope: openid,email,profile
       accessTokenUri: https://www.googleapis.com/oauth2/v4/token
